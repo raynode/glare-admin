@@ -14,6 +14,7 @@ import {
     CREATE,
     UPDATE,
     DELETE,
+    DELETE_MANY,
 } from 'react-admin'
 
 import { queryBuilder } from './query-builder'
@@ -24,13 +25,14 @@ const client = new ApolloClient({ cache, link })
 
 const introspection = {
   operationNames: {
+    [CREATE]: resource => `create${resource.name}`,
+    [DELETE]: resource => `delete${pluralize(resource.name)}`,
+    [DELETE_MANY]: resource => `delete${pluralize(resource.name)}`,
     [GET_LIST]: resource => `${pluralize(resource.name)}`,
-    [GET_ONE]: resource => `${resource.name}`,
     [GET_MANY]: resource => `${pluralize(resource.name)}`,
     [GET_MANY_REFERENCE]: resource => `${pluralize(resource.name)}`,
-    [CREATE]: resource => `create${resource.name}`,
+    [GET_ONE]: resource => `${resource.name}`,
     [UPDATE]: resource => `update${resource.name}`,
-    [DELETE]: resource => `delete${resource.name}`,
   },
   exclude: undefined,
   include: undefined,
@@ -43,6 +45,7 @@ class DataProvider extends React.Component {
   }
 
   componentDidMount() {
+    console.log(introspection)
     queryBuilder({
       client,
       introspection,

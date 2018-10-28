@@ -1,5 +1,5 @@
 import { TypeKind } from 'graphql'
-import { GET_LIST, GET_MANY, GET_MANY_REFERENCE } from 'react-admin'
+import { DELETE, DELETE_MANY, GET_LIST, GET_MANY, GET_MANY_REFERENCE } from 'react-admin'
 import { getFinalType } from './utils'
 
 const sanitizeResource = (introspectionResults, resource) => data => {
@@ -57,16 +57,20 @@ export const getResponseParser = introspectionResults => (aorFetchType, resource
   const sanitize = sanitizeResource(introspectionResults, resource)
   const data = response.data
 
-  if (
-    aorFetchType === GET_LIST ||
-    aorFetchType === GET_MANY ||
-    aorFetchType === GET_MANY_REFERENCE
+  if ( aorFetchType === DELETE )
+    return { data: data[0] }
+  if ( aorFetchType === DELETE_MANY )
+    return { data: [] }
+
+  if ( aorFetchType === GET_LIST
+    || aorFetchType === GET_MANY
+    || aorFetchType === GET_MANY_REFERENCE
   ) {
     return {
-      data: response.data.items.map(sanitize),
-      total: response.data.items.length,
+      data: data.items.map(sanitize),
+      total: data.items.length,
     }
   }
 
-  return { data: sanitize(data.data) }
+  return { data: sanitize(data.data), total: 1 }
 }

@@ -5,7 +5,7 @@ import { getResponseParser } from './get-response-parser'
 export const buildQuery = introspectionResults => {
   const knownResources = introspectionResults.resources.map(r => r.type.name)
 
-  return (aorFetchType, resourceName, params) => {
+  return (fetchType, resourceName, params) => {
     const resource = introspectionResults.resources.find(
       r => r.type.name === resourceName
     )
@@ -18,11 +18,11 @@ export const buildQuery = introspectionResults => {
       )
     }
 
-    const queryType = resource[aorFetchType]
+    const queryType = resource[fetchType]
 
     if (!queryType) {
       throw new Error(
-        `No query or mutation matching aor fetch type ${aorFetchType} could be found for resource ${
+        `No query or mutation matching aor fetch type ${fetchType} could be found for resource ${
           resource.type.name
         }`
       )
@@ -30,18 +30,18 @@ export const buildQuery = introspectionResults => {
 
     const variables = buildVariables(introspectionResults)(
       resource,
-      aorFetchType,
+      fetchType,
       params,
       queryType
     )
     const query = buildGraphQLQuery(introspectionResults)(
       resource,
-      aorFetchType,
+      fetchType,
       queryType,
       variables
     )
     const parseResponse = getResponseParser(introspectionResults)(
-      aorFetchType,
+      fetchType,
       resource,
       queryType
     )

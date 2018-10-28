@@ -7,7 +7,7 @@
     "apollo-cache-inmemory": "^1.2.9",
     "apollo-client": "^2.4.1",
     "apollo-link-http": "^1.5.4",
-    "graphql": "^0.13.2",
+    "graphql": "^14.0.2",
     "graphql-ast-types": "^1.0.2",
     "graphql-tag": "^2.9.2",
     "ra-data-graphql": "^2.2.2",
@@ -15,7 +15,7 @@
     "react-admin": "^2.2.2",
     "react-apollo": "^2.1.11",
     "react-dom": "^16.4.2",
-    "react-scripts": "1.1.5"
+    "react-scripts": "2.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,5 +25,11 @@
   },
   "devDependencies": {
     "eslint-plugin-jest": "^21.22.0"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

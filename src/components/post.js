@@ -10,17 +10,17 @@ import {
   DisabledInput,
   Edit,
   EditButton,
-  ReferenceInput,
-  SelectInput,
   Filter,
   List,
+  ReferenceInput,
+  SelectInput,
   SimpleForm,
   TextField,
   TextInput,
 } from 'react-admin'
 
-import BookIcon from '@material-ui/icons/Face'
-export const PostIcon = BookIcon
+import SubtitlesIcon from '@material-ui/icons/Subtitles'
+export const PostIcon = SubtitlesIcon
 
 export const PostFilter = (props) => (
   <Filter {...props}>
@@ -29,7 +29,10 @@ export const PostFilter = (props) => (
 )
 
 export const PostList = (props) => (
-  <List {...props} filters={<PostFilter />}>
+  <List
+    {...props}
+    filters={<PostFilter />}
+  >
     <Datagrid>
       <DateField source="updatedAt" />
       <TextField source="title" />
@@ -41,7 +44,7 @@ export const PostList = (props) => (
 )
 
 const PostTitle = ({ record }) => {
-  return <span>Post {record ? `"${record.name}"` : ''}</span>
+  return <span>Post {record ? `"${record.title}"` : ''}</span>
 }
 PostTitle.propTypes = {
   record: PropTypes.object,

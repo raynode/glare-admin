@@ -147,7 +147,7 @@ const buildCreateUpdateDataVariables = () => (
     //   }
     // }
 
-    if (typeof params.data[key] === 'object')
+    if (typeof params.data[key] === 'object' && params.data[key].id !== undefined)
       return {
         ...acc,
         [`${key}`]: {
@@ -223,7 +223,9 @@ export const buildVariables = introspectionResults => (
 
     case DELETE:
       return {
-        id: params.id,
+        where: {
+          id: params.id,
+        },
       }
 
     default:
