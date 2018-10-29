@@ -1,4 +1,3 @@
-
 import { merge } from 'lodash'
 import buildDataProvider from 'ra-data-graphql'
 import { CREATE, DELETE, DELETE_MANY, UPDATE, UPDATE_MANY } from 'react-admin'
@@ -11,21 +10,19 @@ export const queryBuilder = options =>
     defaultDataProvider => async (fetchType, resource, params) => {
       const handleMultiQuery = type => {
         const { ids, ...otherParams } = params
-        return Promise.all(ids.map(id =>
-          defaultDataProvider(type, resource, { id, ...otherParams })
-        )).then(results => ({
-          data: results.reduce((acc, { data }) => [...acc, data.id], []),
-        }))
+        return Promise.all(ids.map(id => defaultDataProvider(type, resource, { id, ...otherParams }))).then(
+          results => ({
+            data: results.reduce((acc, { data }) => [...acc, data.id], []),
+          }),
+        )
       }
 
-      if (fetchType === DELETE_MANY)
-        return handleMultiQuery(DELETE)
+      if (fetchType === DELETE_MANY) return handleMultiQuery(DELETE)
 
-      if (fetchType === UPDATE_MANY)
-        return handleMultiQuery(UPDATE)
+      if (fetchType === UPDATE_MANY) return handleMultiQuery(UPDATE)
 
-      if(fetchType === CREATE) {
-        if(resource === 'Asset') {
+      if (fetchType === CREATE) {
+        if (resource === 'Asset') {
           const form = new FormData()
           form.append('asset', new Blob([params.data.data.rawFile]))
           const res = await fetch('http://localhost:3421/asset', {
@@ -50,5 +47,5 @@ export const queryBuilder = options =>
       }
 
       return defaultDataProvider(fetchType, resource, params)
-    }
+    },
   )

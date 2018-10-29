@@ -1,12 +1,4 @@
-import {
-  GET_LIST,
-  GET_ONE,
-  GET_MANY,
-  GET_MANY_REFERENCE,
-  CREATE,
-  UPDATE,
-  DELETE,
-} from 'react-admin'
+import { GET_LIST, GET_ONE, GET_MANY, GET_MANY_REFERENCE, CREATE, UPDATE, DELETE } from 'react-admin'
 
 import { getFinalType, isList } from './utils'
 
@@ -22,24 +14,17 @@ const sanitizeValue = (type, value) => {
   return value
 }
 
-const buildGetListVariables = introspectionResults => (
-  resource,
-  aorFetchType,
-  params
-) => {
+const buildGetListVariables = introspectionResults => (resource, aorFetchType, params) => {
   const where = Object.keys(params.filter).reduce((acc, key) => {
-    if (key === 'ids') return {
-      ...acc,
-      id_in: params.filter[key],
-    }
+    if (key === 'ids')
+      return {
+        ...acc,
+        id_in: params.filter[key],
+      }
 
     if (typeof params.filter[key] === 'object') {
-      const type = introspectionResults.types.find(
-        t => t.name === `${resource.type.name}Filter`
-      )
-      const filterSome = type.inputFields.find(
-        t => t.name === `${key}_some`
-      )
+      const type = introspectionResults.types.find(t => t.name === `${resource.type.name}Filter`)
+      const filterSome = type.inputFields.find(t => t.name === `${key}_some`)
 
       if (filterSome) {
         const filter = Object.keys(params.filter[key]).reduce(
@@ -47,7 +32,7 @@ const buildGetListVariables = introspectionResults => (
             ...acc,
             [`${k}_in`]: params.filter[key][k],
           }),
-          {}
+          {},
         )
         return { ...acc, [`${key}_some`]: filter }
       }
@@ -57,12 +42,8 @@ const buildGetListVariables = introspectionResults => (
 
     if (parts.length > 1) {
       if (parts[1] === 'id') {
-        const type = introspectionResults.types.find(
-          t => t.name === `${resource.type.name}Filter`
-        )
-        const filterSome = type.inputFields.find(
-          t => t.name === `${parts[0]}_some`
-        )
+        const type = introspectionResults.types.find(t => t.name === `${resource.type.name}Filter`)
+        const filterSome = type.inputFields.find(t => t.name === `${parts[0]}_some`)
 
         if (filterSome) {
           return {
@@ -74,9 +55,7 @@ const buildGetListVariables = introspectionResults => (
         return { ...acc, [parts[0]]: { id: params.filter[key] } }
       }
 
-      const resourceField = resource.type.fields.find(
-        f => f.name === parts[0]
-      )
+      const resourceField = resource.type.fields.find(f => f.name === parts[0])
       const type = getFinalType(resourceField.type)
       return { ...acc, [key]: sanitizeValue(type, params.filter[key]) }
     }
@@ -90,18 +69,21 @@ const buildGetListVariables = introspectionResults => (
       if (isAList) {
         // if the values are a list, any of the values will return a hit
         const values = Array.isArray(params.filter[key])
-        ? params.filter[key].map(value => sanitizeValue(type, value))
-        : [ sanitizeValue(type, [params.filter[key]]) ]
+          ? params.filter[key].map(value => sanitizeValue(type, value))
+          : [sanitizeValue(type, [params.filter[key]])]
 
         return {
           ...acc,
-          [`${key}_in`]: values
+          [`${key}_in`]: values,
         }
       }
 
       // if(type.name === 'String')
 
-      return { ...acc, [`${key}_contains`]: sanitizeValue(type, params.filter[key]) }
+      return {
+        ...acc,
+        [`${key}_contains`]: sanitizeValue(type, params.filter[key]),
+      }
     }
 
     return { ...acc, [key]: params.filter[key] }
@@ -109,8 +91,7 @@ const buildGetListVariables = introspectionResults => (
 
   const perPage = parseInt(params.pagination.perPage, 10)
 
-  const order = params.sort.field && params.sort.order
-  ? `${params.sort.field}_${params.sort.order}` : null
+  const order = params.sort.field && params.sort.order ? `${params.sort.field}_${params.sort.order}` : null
 
   return {
     page: {
@@ -122,19 +103,13 @@ const buildGetListVariables = introspectionResults => (
   }
 }
 
-const buildCreateUpdateDataVariables = () => (
-  resource,
-  aorFetchType,
-  params
-) =>
+const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params) =>
   Object.keys(params.data).reduce((acc, key) => {
     // skip id's
-    if(key === 'id')
-      return acc
+    if (key === 'id') return acc
 
     // skip sub-properties
-    if(key.includes('.'))
-      return acc
+    if (key.includes('.')) return acc
 
     // if (Array.isArray(params.data[key])) {
     //   const arg = queryType.args.find(a => a.name === `${key}Ids`)
@@ -161,20 +136,10 @@ const buildCreateUpdateDataVariables = () => (
     }
   }, {})
 
-export const buildVariables = introspectionResults => (
-  resource,
-  aorFetchType,
-  params,
-  queryType
-) => {
+export const buildVariables = introspectionResults => (resource, aorFetchType, params, queryType) => {
   switch (aorFetchType) {
     case GET_LIST: {
-      return buildGetListVariables(introspectionResults)(
-        resource,
-        aorFetchType,
-        params,
-        queryType
-      )
+      return buildGetListVariables(introspectionResults)(resource, aorFetchType, params, queryType)
     }
     case GET_MANY:
       return {
@@ -195,12 +160,7 @@ export const buildVariables = introspectionResults => (
       }
     case UPDATE: {
       return {
-        data: buildCreateUpdateDataVariables(introspectionResults)(
-          resource,
-          aorFetchType,
-          params,
-          queryType
-        ),
+        data: buildCreateUpdateDataVariables(introspectionResults)(resource, aorFetchType, params, queryType),
         where: {
           id: params.id,
         },
@@ -209,12 +169,7 @@ export const buildVariables = introspectionResults => (
 
     case CREATE: {
       return {
-        data: buildCreateUpdateDataVariables(introspectionResults)(
-          resource,
-          aorFetchType,
-          params,
-          queryType
-        ),
+        data: buildCreateUpdateDataVariables(introspectionResults)(resource, aorFetchType, params, queryType),
         where: {
           id: params.id,
         },

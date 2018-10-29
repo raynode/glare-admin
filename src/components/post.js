@@ -22,17 +22,14 @@ import {
 import SubtitlesIcon from '@material-ui/icons/Subtitles'
 export const PostIcon = SubtitlesIcon
 
-export const PostFilter = (props) => (
+export const PostFilter = props => (
   <Filter {...props}>
     <TextInput label="Title" source="title" />
   </Filter>
 )
 
-export const PostList = (props) => (
-  <List
-    {...props}
-    filters={<PostFilter />}
-  >
+export const PostList = props => (
+  <List {...props} filters={<PostFilter />}>
     <Datagrid>
       <DateField source="updatedAt" />
       <TextField source="title" />
@@ -50,7 +47,7 @@ PostTitle.propTypes = {
   record: PropTypes.object,
 }
 
-export const PostEdit = (props) => (
+export const PostEdit = props => (
   <Edit title={<PostTitle />} {...props}>
     <SimpleForm>
       <DisabledInput source="id" />
@@ -67,7 +64,7 @@ export const PostEdit = (props) => (
   </Edit>
 )
 
-export const PostCreate = (props) => (
+export const PostCreate = props => (
   <Create title="Neuen Benutzer anlegen" {...props}>
     <SimpleForm>
       <TextInput source="title" />

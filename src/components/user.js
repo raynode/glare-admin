@@ -19,7 +19,7 @@ import {
 import BookIcon from '@material-ui/icons/Face'
 export const UserIcon = BookIcon
 
-export const UserList = (props) => (
+export const UserList = props => (
   <List {...props}>
     <Datagrid>
       <DateField source="updatedAt" />
@@ -39,7 +39,7 @@ UserTitle.propTypes = {
   record: PropTypes.object,
 }
 
-export const UserEdit = (props) => (
+export const UserEdit = props => (
   <Edit title={<UserTitle />} {...props}>
     <SimpleForm>
       <DisabledInput source="id" />
@@ -50,22 +50,23 @@ export const UserEdit = (props) => (
       <TextInput source="nickname" />
       <TextInput source="name" />
       <DisabledInput source="picture" />
-      <SelectInput source="gender" allowEmpty choices={[
-          { id: 'male', name: 'Männlich' },
-          { id: 'female', name: 'Weiblich' },
-      ]} />
-      <SelectInput source="state" allowEmpty choices={[
-          { id: 'admin', name: 'Admin' },
-          { id: 'member', name: 'Mitglied' },
-          { id: 'guest', name: 'Gast' },
-      ]} />
+      <SelectInput
+        source="gender"
+        allowEmpty
+        choices={[{ id: 'male', name: 'Männlich' }, { id: 'female', name: 'Weiblich' }]}
+      />
+      <SelectInput
+        source="state"
+        allowEmpty
+        choices={[{ id: 'admin', name: 'Admin' }, { id: 'member', name: 'Mitglied' }, { id: 'guest', name: 'Gast' }]}
+      />
       <TextInput source="email" />
       <BooleanInput label="E-Mail verifiziert" source="emailVerified" />
     </SimpleForm>
   </Edit>
 )
 
-export const UserCreate = (props) => (
+export const UserCreate = props => (
   <Create title="Neuen Benutzer anlegen" {...props}>
     <SimpleForm>
       <TextInput source="givenName" />
@@ -73,15 +74,16 @@ export const UserCreate = (props) => (
       <TextInput source="nickname" />
       <TextInput source="name" />
       <DisabledInput source="picture" />
-      <SelectInput source="gender" allowEmpty choices={[
-          { id: 'male', name: 'Männlich' },
-          { id: 'female', name: 'Weiblich' },
-      ]} />
-      <SelectInput source="state" allowEmpty choices={[
-          { id: 'admin', name: 'Admin' },
-          { id: 'member', name: 'Mitglied' },
-          { id: 'guest', name: 'Gast' },
-      ]} />
+      <SelectInput
+        source="gender"
+        allowEmpty
+        choices={[{ id: 'male', name: 'Männlich' }, { id: 'female', name: 'Weiblich' }]}
+      />
+      <SelectInput
+        source="state"
+        allowEmpty
+        choices={[{ id: 'admin', name: 'Admin' }, { id: 'member', name: 'Mitglied' }, { id: 'guest', name: 'Gast' }]}
+      />
       <TextInput source="email" />
       <BooleanInput label="E-Mail verifiziert" source="emailVerified" />
     </SimpleForm>

@@ -21,29 +21,29 @@ import SubtitlesIcon from '@material-ui/icons/NoteAdd'
 export const AssetIcon = SubtitlesIcon
 
 const FileNameOrImageField = ({ record = { type: 'image' }, ...rest }) => {
-  if(record.rawFile)
-    return <FileNameOrImageField record={record.rawFile} />
+  if (record.rawFile) return <FileNameOrImageField record={record.rawFile} />
   const type = record.type.split('/')[0]
-  if(type === 'image')
-    return <ImageField source="url" {...rest} record={{
-      ...record,
-      url: record.url || record.preview,
-    }} />
-  return (
-    <span>{record.mimetype || record.type}</span>
-  )
+  if (type === 'image')
+    return (
+      <ImageField
+        source="url"
+        {...rest}
+        record={{
+          ...record,
+          url: record.url || record.preview,
+        }}
+      />
+    )
+  return <span>{record.mimetype || record.type}</span>
 }
-export const AssetFilter = (props) => (
+export const AssetFilter = props => (
   <Filter {...props}>
     <TextInput label="Title" source="title" />
   </Filter>
 )
 
-export const AssetList = (props) => (
-  <List
-    {...props}
-    filters={<AssetFilter />}
-  >
+export const AssetList = props => (
+  <List {...props} filters={<AssetFilter />}>
     <Datagrid>
       <DateField source="updatedAt" />
       <TextField source="name" />
@@ -60,7 +60,7 @@ AssetTitle.propTypes = {
   record: PropTypes.object,
 }
 
-export const AssetEdit = (props) => (
+export const AssetEdit = props => (
   <Edit title={<AssetTitle />} {...props}>
     <SimpleForm>
       <DisabledInput source="id" />
@@ -73,7 +73,7 @@ export const AssetEdit = (props) => (
   </Edit>
 )
 
-export const AssetCreate = (props) => (
+export const AssetCreate = props => (
   <Create title="Neue Datei hochladen" {...props}>
     <SimpleForm>
       <TextInput source="name" />

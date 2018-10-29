@@ -10,6 +10,9 @@
     "graphql": "^14.0.2",
     "graphql-ast-types": "^1.0.2",
     "graphql-tag": "^2.9.2",
+    "husky": "^1.1.2",
+    "lint-staged": "^7.3.0",
+    "prettier": "^1.14.3",
     "ra-data-graphql": "^2.2.2",
     "react": "^16.4.2",
     "react-admin": "^2.2.2",
@@ -21,7 +24,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier",
+      "git add"
+    ]
   },
   "devDependencies": {
     "eslint-plugin-jest": "^21.22.0"
