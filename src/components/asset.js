@@ -20,7 +20,7 @@ import {
 import SubtitlesIcon from '@material-ui/icons/NoteAdd'
 export const AssetIcon = SubtitlesIcon
 
-const FileNameOrImageField = ({ record = { type: 'image' }, ...rest }) => {
+export const FileNameOrImageField = ({ record = { type: 'image' }, ...rest }) => {
   if (record.rawFile) return <FileNameOrImageField record={record.rawFile} />
   const type = record.type.split('/')[0]
   if (type === 'image')

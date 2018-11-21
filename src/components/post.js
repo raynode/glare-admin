@@ -5,19 +5,22 @@ import {
   BooleanInput,
   Create,
   Datagrid,
-  DateField,
   DateInput,
   DisabledInput,
   Edit,
   EditButton,
   Filter,
+  ImageField,
   List,
+  ReferenceField,
   ReferenceInput,
   SelectInput,
   SimpleForm,
   TextField,
   TextInput,
 } from 'react-admin'
+
+import { TagsArrayField, TagsArrayReferenceInput } from './tag'
 
 import SubtitlesIcon from '@material-ui/icons/Subtitles'
 export const PostIcon = SubtitlesIcon
@@ -31,11 +34,14 @@ export const PostFilter = props => (
 export const PostList = props => (
   <List {...props} filters={<PostFilter />}>
     <Datagrid>
-      <DateField source="updatedAt" />
+      <ReferenceField label="Hauptbild" source="image.id" reference="Asset">
+        <ImageField source="url" />
+      </ReferenceField>
       <TextField source="title" />
       <TextField source="stub" />
       <BooleanField source="published" />
       <EditButton basePath="/Post" />
+      <TagsArrayField />
     </Datagrid>
   </List>
 )
@@ -47,6 +53,28 @@ PostTitle.propTypes = {
   record: PropTypes.object,
 }
 
+const imageRenderer = resource => {
+  if(resource.type !== 'image')
+    return null
+  return (
+    <span style={{
+      display: 'flex',
+      alignItems: 'center',
+    }}>
+      <span style={{
+        backgroundImage: `url(${resource.url})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        width: 50,
+        height: 50,
+        marginRight: 10,
+      }} />
+      <span>{resource.name}</span>
+    </span>
+  )
+}
+
 export const PostEdit = props => (
   <Edit title={<PostTitle />} {...props}>
     <SimpleForm>
@@ -54,7 +82,10 @@ export const PostEdit = props => (
       <DisabledInput source="createdAt" />
       <DateInput source="updatedAt" />
       <TextInput source="title" />
-      <TextInput source="image" />
+      <ReferenceInput allowEmpty label="Hauptbild" source="image.id" reference="Asset">
+        <SelectInput source="url" optionText={imageRenderer} />
+      </ReferenceInput>
+      <TagsArrayReferenceInput />
       <TextInput source="stub" />
       <BooleanInput label="Published" source="published" />
       <ReferenceInput label="User" source="author.id" reference="User">
@@ -65,11 +96,14 @@ export const PostEdit = props => (
 )
 
 export const PostCreate = props => (
-  <Create title="Neuen Benutzer anlegen" {...props}>
+  <Create title="Neuen Post anlegen" {...props}>
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="stub" />
-      <TextInput source="image" />
+      <TagsArrayReferenceInput />
+      <ReferenceInput label="Hauptbild" source="image" reference="Asset">
+        <SelectInput source="url" optionText={imageRenderer} />
+      </ReferenceInput>
       <ReferenceInput label="User" source="author.id" reference="User">
         <SelectInput optionText="name" />
       </ReferenceInput>

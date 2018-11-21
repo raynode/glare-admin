@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
+  // ArrayField,
   BooleanInput,
   Create,
   Datagrid,
@@ -16,6 +17,8 @@ import {
   TextInput,
 } from 'react-admin'
 
+import { TagsArrayField, TagsArrayReferenceInput } from './tag'
+
 import BookIcon from '@material-ui/icons/Face'
 export const UserIcon = BookIcon
 
@@ -27,6 +30,7 @@ export const UserList = props => (
       <TextField source="nickname" />
       <TextField source="name" />
       <TextField source="email" />
+      <TagsArrayField />
       <EditButton basePath="/User" />
     </Datagrid>
   </List>
@@ -50,6 +54,7 @@ export const UserEdit = props => (
       <TextInput source="nickname" />
       <TextInput source="name" />
       <DisabledInput source="picture" />
+      <TagsArrayReferenceInput />
       <SelectInput
         source="gender"
         allowEmpty

@@ -5,6 +5,18 @@ import * as gqlTypes from 'graphql-ast-types'
 
 import { getFinalType, isList, isRequired } from './utils'
 
+const withNodes = selectionSet => gqlTypes.selectionSet([
+  gqlTypes.field(
+    gqlTypes.name('nodes'),
+    null,
+    null,
+    null,
+    selectionSet,
+  )]
+)
+
+const fieldOrList = (isList, selectionSet) => isList ? withNodes(selectionSet) : selectionSet
+
 export const buildFields = introspectionResults => fields =>
   fields.reduce((acc, field) => {
     const { name, kind } = getFinalType(field.type)
@@ -13,22 +25,21 @@ export const buildFields = introspectionResults => fields =>
 
     if (kind !== TypeKind.OBJECT) return [...acc, gqlTypes.field(gqlTypes.name(field.name))]
 
-    const linkedResource = introspectionResults.resources.find(r => r.type.name === name)
+    const list = name.endsWith('s')
 
-    if (linkedResource)
-      return [
-        ...acc,
-        gqlTypes.field(
-          gqlTypes.name(field.name),
-          null,
-          null,
-          null,
-          gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))]),
-        ),
-      ]
+    const linkedResource = introspectionResults.resources.find(r => r.type.name === name)
+    if (linkedResource) return [
+      ...acc,
+      gqlTypes.field(
+        gqlTypes.name(field.name),
+        null,
+        null,
+        null,
+        fieldOrList(list, gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))])),
+      ),
+    ]
 
     const linkedType = introspectionResults.types.find(t => t.name === name)
-
     if (linkedType)
       return [
         ...acc,
@@ -37,7 +48,7 @@ export const buildFields = introspectionResults => fields =>
           null,
           null,
           null,
-          gqlTypes.selectionSet(buildFields(introspectionResults)(linkedType.fields)),
+          fieldOrList(list, gqlTypes.selectionSet(buildFields(introspectionResults)(linkedType.fields))),
         ),
       ]
 
@@ -105,7 +116,7 @@ export const buildGraphQLQuery = introspectionResults => (resource, aorFetchType
             gqlTypes.name('items'),
             args,
             null,
-            gqlTypes.selectionSet(fields),
+            withNodes(gqlTypes.selectionSet(fields)),
           ),
         ]),
         gqlTypes.name(queryType.name),

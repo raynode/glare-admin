@@ -103,7 +103,9 @@ const buildGetListVariables = introspectionResults => (resource, aorFetchType, p
   }
 }
 
-const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params) =>
+const resolveId = data => typeof data === 'object' ? data.id : data
+
+const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params, queryType) =>
   Object.keys(params.data).reduce((acc, key) => {
     // skip id's
     if (key === 'id') return acc
@@ -111,25 +113,29 @@ const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params) =>
     // skip sub-properties
     if (key.includes('.')) return acc
 
-    // if (Array.isArray(params.data[key])) {
-    //   const arg = queryType.args.find(a => a.name === `${key}Ids`)
+    const resourceField = resource.type.fields.find(f => f.name === key)
 
-    //   if (arg) {
-    //     return {
-    //       ...acc,
-    //       [`${key}Ids`]: params.data[key].map(({ id }) => id),
-    //     }
-    //   }
-    // }
+    if(!resourceField)
+      return acc
 
-    if (typeof params.data[key] === 'object' && params.data[key].id !== undefined)
-      return {
-        ...acc,
-        [`${key}`]: {
-          id: params.data[key].id,
-        },
-      }
+    const type = getFinalType(resourceField.type)
+    const isAList = isList(resourceField.type)
 
+    console.log(key, type.kind, params.data[key])
+
+    if(isAList) return {
+      ...acc,
+      [`${key}`]: {
+        id_in: params.data[key].map(resolveId),
+      },
+    }
+
+    if(type.kind === 'OBJECT') return {
+      ...acc,
+      [`${key}`]: { id: resolveId(params.data[key]) },
+    }
+
+    // SCALAR:
     return {
       ...acc,
       [key]: params.data[key],
@@ -137,19 +143,22 @@ const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params) =>
   }, {})
 
 export const buildVariables = introspectionResults => (resource, aorFetchType, params, queryType) => {
+  console.log(aorFetchType, params, queryType)
   switch (aorFetchType) {
     case GET_LIST: {
       return buildGetListVariables(introspectionResults)(resource, aorFetchType, params, queryType)
     }
     case GET_MANY:
       return {
-        filter: { ids: params.ids },
+        where: {
+          id_in: params.ids,
+        },
       }
     case GET_MANY_REFERENCE: {
       const parts = params.target.split('.')
 
       return {
-        filter: { [parts[0]]: { id: params.id } },
+        where: { [parts[0]]: { id: params.id } },
       }
     }
     case GET_ONE:

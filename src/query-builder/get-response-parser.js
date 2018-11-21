@@ -53,9 +53,10 @@ export const getResponseParser = introspectionResults => (aorFetchType, resource
   if (aorFetchType === DELETE_MANY) return { data: [] }
 
   if (aorFetchType === GET_LIST || aorFetchType === GET_MANY || aorFetchType === GET_MANY_REFERENCE) {
+    console.log('getResponseParser', data.items.nodes.map(sanitize))
     return {
-      data: data.items.map(sanitize),
-      total: data.items.length,
+      data: data.items.nodes.map(sanitize),
+      total: data.items.nodes.length, // (data.items.page.page + 1) * data.items.page.limit,
     }
   }
 

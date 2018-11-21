@@ -45,7 +45,6 @@ class DataProvider extends React.Component {
   }
 
   componentDidMount() {
-    console.log(introspection)
     queryBuilder({
       client,
       introspection,

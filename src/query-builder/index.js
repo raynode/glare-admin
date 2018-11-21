@@ -11,9 +11,12 @@ export const queryBuilder = options =>
       const handleMultiQuery = type => {
         const { ids, ...otherParams } = params
         return Promise.all(ids.map(id => defaultDataProvider(type, resource, { id, ...otherParams }))).then(
-          results => ({
-            data: results.reduce((acc, { data }) => [...acc, data.id], []),
-          }),
+          results => {
+            console.log(results)
+            return ({
+              data: results.reduce((acc, { data }) => [...acc, data.id], []),
+            })
+          }
         )
       }
 
