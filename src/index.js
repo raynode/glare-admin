@@ -6,16 +6,7 @@ import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import pluralize from 'pluralize'
-import {
-    GET_LIST,
-    GET_ONE,
-    GET_MANY,
-    GET_MANY_REFERENCE,
-    CREATE,
-    UPDATE,
-    DELETE,
-    DELETE_MANY,
-} from 'react-admin'
+import { GET_LIST, GET_ONE, GET_MANY, GET_MANY_REFERENCE, CREATE, UPDATE, DELETE, DELETE_MANY } from 'react-admin'
 
 import { queryBuilder } from './query-builder'
 
@@ -48,8 +39,7 @@ class DataProvider extends React.Component {
     queryBuilder({
       client,
       introspection,
-    })
-    .then(dataProvider => {
+    }).then(dataProvider => {
       this.setState({ dataProvider })
     })
   }

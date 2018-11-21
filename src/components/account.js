@@ -39,11 +39,7 @@ export const AccountList = props => (
       <BooleanField source="published" />
       <EditButton basePath="/Account" />
       <TagsArrayField />
-      <ReferenceNodesField
-        label="Owner"
-        reference="User"
-        source="owners"
-      >
+      <ReferenceNodesField label="Owner" reference="User" source="owners">
         <SingleFieldList>
           <ChipField source="name" />
         </SingleFieldList>

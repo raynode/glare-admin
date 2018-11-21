@@ -103,7 +103,7 @@ const buildGetListVariables = introspectionResults => (resource, aorFetchType, p
   }
 }
 
-const resolveId = data => typeof data === 'object' ? data.id : data
+const resolveId = data => (typeof data === 'object' ? data.id : data)
 
 const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params, queryType) =>
   Object.keys(params.data).reduce((acc, key) => {
@@ -115,25 +115,26 @@ const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params, qu
 
     const resourceField = resource.type.fields.find(f => f.name === key)
 
-    if(!resourceField)
-      return acc
+    if (!resourceField) return acc
 
     const type = getFinalType(resourceField.type)
     const isAList = isList(resourceField.type)
 
     console.log(key, type.kind, params.data[key])
 
-    if(isAList) return {
-      ...acc,
-      [`${key}`]: {
-        id_in: params.data[key].map(resolveId),
-      },
-    }
+    if (isAList)
+      return {
+        ...acc,
+        [`${key}`]: {
+          id_in: params.data[key].map(resolveId),
+        },
+      }
 
-    if(type.kind === 'OBJECT') return {
-      ...acc,
-      [`${key}`]: { id: resolveId(params.data[key]) },
-    }
+    if (type.kind === 'OBJECT')
+      return {
+        ...acc,
+        [`${key}`]: { id: resolveId(params.data[key]) },
+      }
 
     // SCALAR:
     return {

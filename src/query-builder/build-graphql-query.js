@@ -5,17 +5,10 @@ import * as gqlTypes from 'graphql-ast-types'
 
 import { getFinalType, isList, isRequired } from './utils'
 
-const withNodes = selectionSet => gqlTypes.selectionSet([
-  gqlTypes.field(
-    gqlTypes.name('nodes'),
-    null,
-    null,
-    null,
-    selectionSet,
-  )]
-)
+const withNodes = selectionSet =>
+  gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('nodes'), null, null, null, selectionSet)])
 
-const fieldOrList = (isList, selectionSet) => isList ? withNodes(selectionSet) : selectionSet
+const fieldOrList = (isList, selectionSet) => (isList ? withNodes(selectionSet) : selectionSet)
 
 export const buildFields = introspectionResults => fields =>
   fields.reduce((acc, field) => {
@@ -28,16 +21,17 @@ export const buildFields = introspectionResults => fields =>
     const list = name.endsWith('s')
 
     const linkedResource = introspectionResults.resources.find(r => r.type.name === name)
-    if (linkedResource) return [
-      ...acc,
-      gqlTypes.field(
-        gqlTypes.name(field.name),
-        null,
-        null,
-        null,
-        fieldOrList(list, gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))])),
-      ),
-    ]
+    if (linkedResource)
+      return [
+        ...acc,
+        gqlTypes.field(
+          gqlTypes.name(field.name),
+          null,
+          null,
+          null,
+          fieldOrList(list, gqlTypes.selectionSet([gqlTypes.field(gqlTypes.name('id'))])),
+        ),
+      ]
 
     const linkedType = introspectionResults.types.find(t => t.name === name)
     if (linkedType)

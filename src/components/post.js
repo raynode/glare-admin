@@ -54,22 +54,25 @@ PostTitle.propTypes = {
 }
 
 const imageRenderer = resource => {
-  if(resource.type !== 'image')
-    return null
+  if (resource.type !== 'image') return null
   return (
-    <span style={{
-      display: 'flex',
-      alignItems: 'center',
-    }}>
-      <span style={{
-        backgroundImage: `url(${resource.url})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'contain',
-        backgroundRepeat: 'no-repeat',
-        width: 50,
-        height: 50,
-        marginRight: 10,
-      }} />
+    <span
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <span
+        style={{
+          backgroundImage: `url(${resource.url})`,
+          backgroundPosition: 'center',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          width: 50,
+          height: 50,
+          marginRight: 10,
+        }}
+      />
       <span>{resource.name}</span>
     </span>
   )

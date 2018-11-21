@@ -10,14 +10,12 @@ export const queryBuilder = options =>
     defaultDataProvider => async (fetchType, resource, params) => {
       const handleMultiQuery = type => {
         const { ids, ...otherParams } = params
-        return Promise.all(ids.map(id => defaultDataProvider(type, resource, { id, ...otherParams }))).then(
-          results => {
-            console.log(results)
-            return ({
-              data: results.reduce((acc, { data }) => [...acc, data.id], []),
-            })
+        return Promise.all(ids.map(id => defaultDataProvider(type, resource, { id, ...otherParams }))).then(results => {
+          console.log(results)
+          return {
+            data: results.reduce((acc, { data }) => [...acc, data.id], []),
           }
-        )
+        })
       }
 
       if (fetchType === DELETE_MANY) return handleMultiQuery(DELETE)

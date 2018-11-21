@@ -1,10 +1,8 @@
 import React from 'react'
 
-import {
-  ReferenceArrayField,
-} from 'react-admin'
+import { ReferenceArrayField } from 'react-admin'
 
-export const ReferenceNodesField = ({ record, source,...props }) => {
+export const ReferenceNodesField = ({ record, source, ...props }) => {
   const data = record[source]
   return !data ? null : (
     <ReferenceArrayField
