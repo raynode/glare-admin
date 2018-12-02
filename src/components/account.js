@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {
   BooleanField,
   BooleanInput,
+  ChipField,
   Create,
   Datagrid,
   DateInput,
@@ -10,21 +11,23 @@ import {
   Edit,
   EditButton,
   Filter,
+  List,
   NumberField,
   NumberInput,
-  List,
+  ReferenceArrayInput,
   ReferenceInput,
+  SelectArrayInput,
   SelectInput,
-  SingleFieldList,
-  ChipField,
   SimpleForm,
+  SimpleFormIterator,
+  SingleFieldList,
   TextInput,
 } from 'react-admin'
 import { ReferenceNodesField } from '../utils/ReferenceNodesField'
 import { TagsArrayField, TagsArrayReferenceInput } from './tag'
 
-import SubtitlesIcon from '@material-ui/icons/Subtitles'
-export const AccountIcon = SubtitlesIcon
+import AccountBalance from '@material-ui/icons/AccountBalance'
+export const AccountIcon = AccountBalance
 
 export const AccountFilter = props => (
   <Filter {...props}>
@@ -63,13 +66,20 @@ export const AccountEdit = props => (
       <DateInput source="updatedAt" />
       <NumberInput source="amount" />
       <TagsArrayReferenceInput />
-      <BooleanInput label="Published" source="published" />
-      <ReferenceInput label="User" source="author.id" reference="User">
-        <SelectInput optionText="name" />
-      </ReferenceInput>
+      <ReferenceArrayInput label="Owner" source="owners.nodesIds" reference="User">
+        <SelectArrayInput optionText="name" />
+      </ReferenceArrayInput>
     </SimpleForm>
   </Edit>
 )
+/*
+      <ReferenceArrayInput source="expenses.nodes" reference="Expense">
+        <SimpleFormIterator>
+          <DateInput source="amount" />
+          <TextInput source="user.id" />
+        </SimpleFormIterator>
+      </ReferenceArrayInput>
+/* */
 
 export const AccountCreate = props => (
   <Create title="Neuen Account anlegen" {...props}>

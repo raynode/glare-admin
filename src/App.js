@@ -5,10 +5,20 @@ import { AccountList, AccountEdit, AccountCreate, AccountIcon } from './componen
 import { UserList, UserEdit, UserCreate, UserIcon } from './components/user'
 import { PostList, PostEdit, PostCreate, PostIcon } from './components/post'
 import { AssetList, AssetEdit, AssetCreate, AssetIcon } from './components/asset'
+import { createMuiTheme } from '@material-ui/core/styles'
+import deepOrange from '@material-ui/core/colors/deepOrange'
+
+const theme = createMuiTheme({
+  palette: {
+    secondary: deepOrange,
+    type: 'dark', // Switching the dark mode on is a single property value change.
+  },
+})
 
 export const App = ({ dataProvider }) => (
-  <Admin dataProvider={dataProvider}>
+  <Admin dataProvider={dataProvider} theme={theme}>
     <Resource name="Tag" />
+    <Resource name="Expense" />
     <Resource name="User" list={UserList} edit={UserEdit} create={UserCreate} icon={UserIcon} />
     <Resource name="Account" list={AccountList} edit={AccountEdit} create={AccountCreate} icon={AccountIcon} />
     <Resource name="Post" list={PostList} edit={PostEdit} create={PostCreate} icon={PostIcon} />

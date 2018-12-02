@@ -3,6 +3,9 @@ import { DELETE, DELETE_MANY, GET_LIST, GET_MANY, GET_MANY_REFERENCE } from 'rea
 import { getFinalType } from './utils'
 
 const sanitizeResource = (introspectionResults, resource) => data => {
+  if(!data)
+    return {}
+
   const result = Object.keys(data).reduce((acc, key) => {
     if (key.startsWith('_')) {
       return acc
@@ -52,12 +55,9 @@ export const getResponseParser = introspectionResults => (aorFetchType, resource
   if (aorFetchType === DELETE) return { data: data[0] }
   if (aorFetchType === DELETE_MANY) return { data: [] }
 
-  if (aorFetchType === GET_LIST || aorFetchType === GET_MANY || aorFetchType === GET_MANY_REFERENCE) {
-    console.log('getResponseParser', data.items.nodes.map(sanitize))
-    return {
-      data: data.items.nodes.map(sanitize),
-      total: data.items.nodes.length, // (data.items.page.page + 1) * data.items.page.limit,
-    }
+  if (aorFetchType === GET_LIST || aorFetchType === GET_MANY || aorFetchType === GET_MANY_REFERENCE) return {
+    data: data.items.nodes.map(sanitize),
+    total: data.items.nodes.length, // (data.items.page.page + 1) * data.items.page.limit,
   }
 
   return { data: sanitize(data.data), total: 1 }

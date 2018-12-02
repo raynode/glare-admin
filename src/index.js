@@ -14,16 +14,18 @@ const link = new HttpLink({ uri: 'http://localhost:3421' })
 const cache = new InMemoryCache()
 const client = new ApolloClient({ cache, link })
 
+const operationName = fn => ({ name }) => fn({ singular: name, name, plural: pluralize(name) })
+
 const introspection = {
   operationNames: {
-    [CREATE]: resource => `create${resource.name}`,
-    [DELETE]: resource => `delete${pluralize(resource.name)}`,
-    [DELETE_MANY]: resource => `delete${pluralize(resource.name)}`,
-    [GET_LIST]: resource => `${pluralize(resource.name)}`,
-    [GET_MANY]: resource => `${pluralize(resource.name)}`,
-    [GET_MANY_REFERENCE]: resource => `${pluralize(resource.name)}`,
-    [GET_ONE]: resource => `${resource.name}`,
-    [UPDATE]: resource => `update${resource.name}`,
+    [CREATE]: operationName(({ name }) => `create${name}`),
+    [DELETE]: operationName(({ plural }) => `delete${plural}`),
+    [DELETE_MANY]: operationName(({ plural }) => `delete${plural}`),
+    [GET_LIST]: operationName(({ plural }) => plural),
+    [GET_MANY]: operationName(({ plural }) => plural),
+    [GET_MANY_REFERENCE]: operationName(({ plural }) => plural),
+    [GET_ONE]: operationName(({ singular }) => singular),
+    [UPDATE]: operationName(({ name }) => `update${name}`),
   },
   exclude: undefined,
   include: undefined,

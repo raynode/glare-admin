@@ -8,6 +8,8 @@ import {
   SingleFieldList,
 } from 'react-admin'
 
+// export const NodesToIdRecord = ({ children, record, ...props }) =>
+
 export const TagDisplayField = ({ data, ...props }) =>
   !data ? null : (
     <ReferenceArrayField
@@ -29,7 +31,7 @@ export const TagsArrayField = props => (
 )
 
 export const TagsArrayReferenceInput = props => (
-  <ReferenceArrayInput {...props} allowEmpty label="Tags" source="tags.nodes" reference="Tag">
+  <ReferenceArrayInput {...props} allowEmpty label="Tags" source="tags.nodesIds" reference="Tag">
     <SelectArrayInput optionText="tag" />
   </ReferenceArrayInput>
 )

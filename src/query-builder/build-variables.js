@@ -78,12 +78,19 @@ const buildGetListVariables = introspectionResults => (resource, aorFetchType, p
         }
       }
 
-      // if(type.name === 'String')
+      const sanitizedValue = sanitizeValue(type, params.filter[key])
+      const filter = ({
+        'Boolean': { [`${key}`]: sanitizedValue },
+        'String': { [`${key}_contains`]: sanitizedValue },
+      })
 
-      return {
-        ...acc,
-        [`${key}_contains`]: sanitizeValue(type, params.filter[key]),
-      }
+      if(filter.hasOwnProperty(type.name))
+        return {
+          ...acc,
+          ...filter[type.name],
+        }
+
+      throw new Error(`Could not find "${type.name}" (field: "${key}")`)
     }
 
     return { ...acc, [key]: params.filter[key] }
@@ -118,15 +125,13 @@ const buildCreateUpdateDataVariables = () => (resource, aorFetchType, params, qu
     if (!resourceField) return acc
 
     const type = getFinalType(resourceField.type)
-    const isAList = isList(resourceField.type)
-
-    console.log(key, type.kind, params.data[key])
+    const isAList = params.data[key] && params.data[key].hasOwnProperty('nodesIds')
 
     if (isAList)
       return {
         ...acc,
         [`${key}`]: {
-          id_in: params.data[key].map(resolveId),
+          id_in: params.data[key].nodesIds,
         },
       }
 
@@ -169,8 +174,10 @@ export const buildVariables = introspectionResults => (resource, aorFetchType, p
         },
       }
     case UPDATE: {
+      const data = buildCreateUpdateDataVariables(introspectionResults)(resource, aorFetchType, params, queryType)
+      console.log('<<<< >>>> UPDATE', data)
       return {
-        data: buildCreateUpdateDataVariables(introspectionResults)(resource, aorFetchType, params, queryType),
+        data,
         where: {
           id: params.id,
         },

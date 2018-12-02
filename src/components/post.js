@@ -28,11 +28,15 @@ export const PostIcon = SubtitlesIcon
 export const PostFilter = props => (
   <Filter {...props}>
     <TextInput label="Title" source="title" />
+    <BooleanInput label="Published" source="published" alwaysOn />
   </Filter>
 )
 
 export const PostList = props => (
-  <List {...props} filters={<PostFilter />}>
+  <List {...props}
+    filters={<PostFilter />}
+    filterDefaultValues={{ published: false }}
+  >
     <Datagrid>
       <ReferenceField label="Hauptbild" source="image.id" reference="Asset">
         <ImageField source="url" />
